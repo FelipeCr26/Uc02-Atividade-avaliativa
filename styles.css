@@ -1,0 +1,47 @@
+body {
+    display: grid;
+    height: 100vh;
+    place-content: center;
+    font-family: sans-serif;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 180px 180px 180px 180px;
+    gap: 10px;
+}
+
+.carta {
+    position: relative;
+    cursor: pointer;
+}
+
+.atras {
+    background-image: url('../Uc02-Atividade-avaliativa/Assets/bg.jpg');
+    backface-visibility: hidden;
+}
+
+.frente {
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    transition: all 500ms ease;
+}
+
+.carta-virada .frente {
+    transform: rotateY(0deg);
+}
+
+.carta-virada .atras {
+    transform: rotateY(180deg);
+}
+
+button {
+    border: none;
+    padding: 20px;
+    width: 250px;
+    margin-top: 20px;
+    font-size: 17px;
+    font-weight: bold;
+    justify-self: center;
+    cursor: pointer;
+}
