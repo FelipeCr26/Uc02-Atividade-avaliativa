@@ -18,38 +18,39 @@ let items = [
 
 ];
 
+const virarCarta = (event) => {
+    const divCarta = event.target
+    console.log(event.target)
+    const imgCarta = document.createElement("img")
+    const carta = items.find((meme) => meme.nome === divCarta.getAttribute("data-carta"))
+
+    console.log(carta)
+    imgCarta.setAttribute("src", carta.imagem)
+    imgCarta.classList.add("imgCarta")
+
+    divCarta.classList.add("carta-virada");
+    divCarta.appendChild(imgCarta)
+    if (!primeiraCarta) {
+        primeiraCarta = divCarta;
+    } else if (!segundaCarta) {
+        segundaCarta = divCarta;
+    }
+}
+
 function criarCartas() {
     let itemsDuplicados = [...items, ...items];
     let memes = itemsDuplicados.sort(() => Math.random() - 0.5);
 
-    memes.map((meme) => {
-        container.innerHTML += `
-    <div class="carta" data-carta=${meme.nome}>
-    <div class="atras"></div>
-    <div class="frente">
-      <img src=${meme.imagem} width="180px" height="180px" />
-    </div>`;
-    });
+    memes.forEach((meme) => {
+        const divCarta = document.createElement("div")
+        divCarta.classList.add("carta")
+        divCarta.setAttribute("data-carta", meme.nome)
+        divCarta.addEventListener("click", virarCarta)
+        container.appendChild(divCarta)
+    })
 }
 criarCartas();
 
-function virarCarta() {
-    cartas = document.querySelectorAll(".carta");
-
-    cartas.forEach((carta) => {
-        carta.addEventListener("click", () => {
-            if (primeiraCarta == "") {
-                carta.classList.add("carta-virada");
-                primeiraCarta = carta;
-            } else if (segundaCarta == "") {
-                carta.classList.add("carta-virada");
-                segundaCarta = carta;
-                checarCartas(carta);
-            }
-        });
-    });
-}
-virarCarta();
 
 function checarCartas() {
     const primeiroMeme = primeiraCarta.getAttribute("data-carta");
@@ -68,3 +69,4 @@ function checarCartas() {
         }, 600);
     }
 }
+checarCartas()
