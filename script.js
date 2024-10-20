@@ -1,10 +1,10 @@
 const container = document.querySelector(".container");
-const botoaReiniciar = document.querySelector("button");
-let cartas;
+const botaoReiniciar = document.querySelector("button");
 let primeiraCarta = "";
 let segundaCarta = "";
+let cartasBloqueadas = false;
 
-botoaReiniciar.addEventListener("click", () => location.reload());
+botaoReiniciar.addEventListener("click", () => location.reload());
 
 let items = [
     { nome: "faustao", imagem: "/Assets/faustao.jpg" },
@@ -15,58 +15,61 @@ let items = [
     { nome: "jailson", imagem: "/Assets/jailson.jpg" },
     { nome: "naosei", imagem: "/Assets/naosei.jpg" },
     { nome: "serjao", imagem: "/Assets/serjao.jpg" },
-
 ];
 
 const virarCarta = (event) => {
-    const divCarta = event.target
-    console.log(event.target)
-    const imgCarta = document.createElement("img")
-    const carta = items.find((meme) => meme.nome === divCarta.getAttribute("data-carta"))
+    if (cartasBloqueadas) return;
 
-    console.log(carta)
-    imgCarta.setAttribute("src", carta.imagem)
-    imgCarta.classList.add("imgCarta")
+    const divCarta = event.target;
+
+    if (divCarta.classList.contains("carta-virada")) return;
+
+    const imgCarta = document.createElement("img");
+    const carta = items.find((meme) => meme.nome === divCarta.getAttribute("data-carta"));
+
+    imgCarta.setAttribute("src", carta.imagem);
+    imgCarta.classList.add("imgCarta");
 
     divCarta.classList.add("carta-virada");
-    divCarta.appendChild(imgCarta)
+    divCarta.appendChild(imgCarta);
+
     if (!primeiraCarta) {
         primeiraCarta = divCarta;
     } else if (!segundaCarta) {
         segundaCarta = divCarta;
+
+        cartasBloqueadas = true;
+
+
+        if (primeiraCarta.getAttribute("data-carta") === segundaCarta.getAttribute("data-carta")) {
+            primeiraCarta = "";
+            segundaCarta = "";
+            cartasBloqueadas = false;
+        } else {
+            setTimeout(() => {
+                primeiraCarta.classList.remove("carta-virada");
+                segundaCarta.classList.remove("carta-virada");
+                primeiraCarta.innerHTML = "";
+                segundaCarta.innerHTML = "";
+                primeiraCarta = "";
+                segundaCarta = "";
+                cartasBloqueadas = false;
+            }, 600);
+        }
     }
-}
+};
 
 function criarCartas() {
     let itemsDuplicados = [...items, ...items];
     let memes = itemsDuplicados.sort(() => Math.random() - 0.5);
 
     memes.forEach((meme) => {
-        const divCarta = document.createElement("div")
-        divCarta.classList.add("carta")
-        divCarta.setAttribute("data-carta", meme.nome)
-        divCarta.addEventListener("click", virarCarta)
-        container.appendChild(divCarta)
-    })
+        const divCarta = document.createElement("div");
+        divCarta.classList.add("carta");
+        divCarta.setAttribute("data-carta", meme.nome);
+        divCarta.addEventListener("click", virarCarta);
+        container.appendChild(divCarta);
+    });
 }
+
 criarCartas();
-
-
-function checarCartas() {
-    const primeiroMeme = primeiraCarta.getAttribute("data-carta");
-    const segundoMeme = segundaCarta.getAttribute("data-carta");
-
-    if (primeiroMeme == segundoMeme) {
-        primeiraCarta = "";
-        segundaCarta = "";
-    } else {
-        setTimeout(() => {
-            primeiraCarta.classList.remove("carta-virada");
-            segundaCarta.classList.remove("carta-virada");
-
-            primeiraCarta = "";
-            segundaCarta = "";
-        }, 600);
-    }
-}
-checarCartas()
